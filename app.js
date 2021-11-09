@@ -1,6 +1,5 @@
 //Have all your configuration in an app.js file
 //On va aller chercher le module express et fs
-const fs = require('fs');
 const express = require('express');
 const morgan = require('morgan');
 const tourRouter = require("./routes/tourRoutes")
@@ -29,16 +28,9 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
 //On va utiliser les Routers après la  définition des routes. Mounting des routes ici.
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
-//SERVER
-const port = 8000;
-
-app.listen(port, () => {
-  console.log(`App running on port ${port}`);
-});
+module.exports = app;

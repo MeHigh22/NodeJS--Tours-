@@ -4,7 +4,14 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 );
 
-
+//A quoi vont nous servir les middleware param? Ne pas repeter du code. dans ce cas-ci, vérifier si l'id existe ou pas et sinon retourner 404.
+exports.checkID = (req, res, next, val) => {
+  console.log(`Your Id IS : ${val}`);
+  if (req.params.id * 1 > tours.length) {
+    return res.status(404).json({ status: 'fail', message: 'Invalid ID' });
+  }
+  next();
+}
 
 exports.getAllTours = (req, res) => {
   console.log(req.requestTime);
@@ -62,12 +69,9 @@ exports.createTour = (req, res) => {
 
 exports.getTour = (req, res) => {
   console.log(req.params);
-
   const id = req.params.id * 1;
   const tour = tours.find((el) => el.id === id);
-  if (!tour) {
-    return res.status(404).json({ status: 'fail', message: 'Invalid ID' });
-  }
+
   res.status(200).json({
     status: 'success',
     //Pourquoi Tours : Tours? Le premier parce que c'est le endpoint api/v1/tours <- Et le deuxième tours est pour la data
@@ -78,18 +82,14 @@ exports.getTour = (req, res) => {
 };
 
 exports.updateTour = (req, res) => {
-  if (req.params.id * 1 > tours.length) {
-    return res.status(404).json({ status: 'fail', message: 'Invalid ID' });
-  }
+  
   res
     .status(200)
     .json({ status: 'success', data: { tour: '<Updated tour here.>' } });
 };
 
 exports.deleteTour = (req, res) => {
-  if (req.params.id * 1 > tours.length) {
-    return res.status(404).json({ status: 'fail', message: 'Invalid ID' });
-  }
+  
   res
     //204 C'est la suppression comme statut
     .status(204)

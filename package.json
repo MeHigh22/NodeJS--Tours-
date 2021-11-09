@@ -3,7 +3,9 @@
     "version": "1.0.0",
     "description": "Leaning Node, Express & MongoDB",
     "main": "app.js",
-    "scripts": {},
+    "scripts": {
+        "start": "nodemon server.js"
+    },
     "author": "Mihai Patap",
     "license": "yesokay",
     "dependencies": {
