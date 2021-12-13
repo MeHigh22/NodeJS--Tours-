@@ -2,8 +2,8 @@
 //On va aller chercher le module express et fs
 const express = require('express');
 const morgan = require('morgan');
-const tourRouter = require("./routes/tourRoutes")
-const userRouter = require("./routes/userRoutes")
+const tourRouter = require('./routes/tourRoutes');
+const userRouter = require('./routes/userRoutes');
 
 //Creates an express application
 const app = express();
@@ -13,7 +13,15 @@ const app = express();
 //It stand between the request and the response. The data from the body is added to the request object.
 app.use(express.json());
 //Middleware externe installé avec NPM
-app.use(morgan('dev'));
+
+console.log(process.env.NODE_ENV);
+
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+
+//Visualiser du contenu statique, faut lui donner l'accès avec un parametre d'express, module.
+app.use(express.static(`${__dirname}/public`));
 
 //Troisieme argument pour le middleware(On peut l'appeler comme on veut) S'applique sur chaque requete. On peut avoir un nombre infini de middleware
 app.use((req, res, next) => {
@@ -33,4 +41,5 @@ app.use((req, res, next) => {
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
+module.exports = app;
 module.exports = app;

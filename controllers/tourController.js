@@ -1,4 +1,6 @@
+/* eslint-disable node/no-unsupported-features/es-syntax */
 const fs = require('fs');
+// eslint-disable-next-line prettier/prettier
 //La méthode JSON.parse() analyse une chaîne de caractères JSON et construit la valeur JavaScript ou l'objet décrit par cette chaîne.
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
@@ -11,7 +13,17 @@ exports.checkID = (req, res, next, val) => {
     return res.status(404).json({ status: 'fail', message: 'Invalid ID' });
   }
   next();
-}
+};
+
+//Que fait-on ici? Un middleware pour vérifier que le name et le price sont là. Voir ce middleware dans tourRoutes dans routes.
+exports.checkBody = (req, res, next) => {
+  if (!req.body.name || !req.body.price) {
+    return res
+      .status(400)
+      .json({ status: 'fail', message: 'Name or Price missing' });
+  }
+  next();
+};
 
 exports.getAllTours = (req, res) => {
   console.log(req.requestTime);
@@ -38,12 +50,12 @@ exports.getAllTours = (req, res) => {
 
 exports.createTour = (req, res) => {
   const newId = tours[tours.length - 1].id + 1;
-  const newTour = Object.assign({ id: newId }, req.body);
+  const newTour = { id: newId, ...req.body };
   tours.push(newTour);
   fs.writeFile(
     `${__dirname}/dev-data/data/tours-simple.json`,
     JSON.stringify(tours),
-    (err) => {
+    () => {
       res.status(201).json({
         status: 'success',
         data: {
@@ -82,14 +94,12 @@ exports.getTour = (req, res) => {
 };
 
 exports.updateTour = (req, res) => {
-  
   res
     .status(200)
     .json({ status: 'success', data: { tour: '<Updated tour here.>' } });
 };
 
 exports.deleteTour = (req, res) => {
-  
   res
     //204 C'est la suppression comme statut
     .status(204)

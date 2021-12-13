@@ -10,7 +10,7 @@ const router = express.Router();
 router.param('id', tourController.checkID);
 
 //L'implementer dans nos routes.
-router.route('/').get(tourController.getAllTours).post(tourController.createTour);
+router.route('/').get(tourController.getAllTours).post(tourController.checkBody ,tourController.createTour);
 
 router.route('/:id').get(tourController.getTour).patch(tourController.updateTour).delete(tourController.deleteTour);
 
